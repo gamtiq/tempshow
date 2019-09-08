@@ -1,0 +1,15 @@
+{
+    "root": true,
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "guard/optimum-next",
+        "guard/react",
+        "guard/jsdoc"
+    ],
+    "parserOptions": {
+        "sourceType": "module"
+    }
+}

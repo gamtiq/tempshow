@@ -1,0 +1,66 @@
+{
+  "name": "tempshow",
+  "version": "1.0.0",
+  "description": "React component to temporary show some components/elements",
+  "source": "src/TempShow.js",
+  "main": "dist/tempshow.js",
+  "module": "dist/tempshow.es.js",
+  "umd:main": "dist/tempshow.umd.js",
+  "scripts": {
+    "build": "microbundle --jsx React.createElement --no-compress",
+    "lint": "eslint --cache --max-warnings 0 \"**/*.js\"",
+    "lint-error": "eslint --cache \"**/*.js\"",
+    "lint-all": "eslint --max-warnings 0 \"**/*.js\"",
+    "lint-all-error": "eslint \"**/*.js\"",
+    "check": "npm run lint && npm test",
+    "check-all": "npm run lint-all && npm test",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gamtiq/tempshow.git"
+  },
+  "keywords": [
+    "react",
+    "component",
+    "react-component",
+    "temporary",
+    "temp",
+    "show",
+    "hide",
+    "element",
+    "elements",
+    "children",
+    "components",
+    "ui"
+  ],
+  "peerDependencies": {
+    "prop-types": ">=15.5.4",
+    "react": ">=15.0.0",
+    "react-dom": ">=15.0.0"
+  },
+  "author": "Denis Sikuler",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gamtiq/tempshow/issues"
+  },
+  "homepage": "https://github.com/gamtiq/tempshow#readme",
+  "devDependencies": {
+    "@babel/core": "7.6.0",
+    "@babel/preset-env": "7.6.0",
+    "@babel/preset-react": "7.0.0",
+    "@babel/register": "7.6.0",
+    "chai": "4.2.0",
+    "enzyme": "3.10.0",
+    "enzyme-adapter-react-16": "1.14.0",
+    "eslint": "6.3.0",
+    "eslint-config-guard": "1.0.1",
+    "husky": "3.0.5",
+    "microbundle": "0.11.0",
+    "mocha": "6.2.0",
+    "react": "16.9.0",
+    "react-dom": "16.9.0",
+    "react-test-util": "1.0.0"
+  },
+  "dependencies": {}
+}
