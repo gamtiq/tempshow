@@ -4,6 +4,14 @@ React component to temporary show some components/elements.
 
 [![NPM version](https://badge.fury.io/js/tempshow.png)](http://badge.fury.io/js/tempshow)
 
+### Features
+
+* Control which events should trigger showing or hiding.
+* Set timeout for automatic hiding (`autoHide` property).
+* Specify a function to be called when component is shown (`onShow` property) or hidden (`onHide` property).
+* Control component's visibility by `visible` property.
+* Use different CSS classes and styles when component is visible and hidden.
+
 ## Table of contents
 
 * [Installation](#install)
@@ -76,14 +84,17 @@ export class Foo extends React.Component {
 |  `children`  |  React node  |    |  Component's children.  |
 |  `className`  |  string  |    |  A CSS class that should be set for component's root element.  |
 |  `component`  |  React elementType  |  `div`  |  Component's root element type.  |
+|  `componentProps`  |  object  |    |  Any properties (except for `className` and `style`) that should be passed to component.  |
 |  `componentRef`  |  function, object  |    |  An optional ref callback to get reference to the root (top-most) element of the rendered component.  Just like other refs, this will provide `null` when it unmounts.  |
 |  `hideClassName`  |  string  |    |  An additional CSS class that should be set for component's root element when component is hidden.  |
-|  `hideForClick`  |  function  |  [hideForClick](#hideForClick)  |  Function that will be used to determine whether component should be hidden on a mouse click when value of `hideOnAnyClick` prop is `false`.  The following arguments will be passed into function: event data (`SyntheticEvent`) and component's object.  If function returns `true`, component will be hidden.  |
+|  `hideForClick`  |  function  |  [hideForClick](#hideForClick)  |  Function that will be used to determine whether component should be hidden on a mouse click when value of `hideOnAnyClick` prop is `false`.  The following arguments will be passed into function: event data (`SyntheticEvent`) and component's object.  If function returns a true value, component will be hidden.  |
 |  `hideOnAnyClick`  |  boolean  |  `false`  |  Whether component should be hidden on any mouse click.  |
+|  `hideOnBlur`  |  boolean or function  |  `false`  |  Whether component should be hidden on `blur` event.  A function can be specified to determine whether component should be hidden.  The following arguments will be passed into function: event data (`SyntheticEvent`) and component's object.  If the function returns a true value, component will be hidden.  |
 |  `hideOnMouseLeave`  |  boolean  |  `false`  |  Whether component should be hidden when mouse leaves area of component's root DOM element.  |
 |  `hideStyle`  |  object  |    |  Styles that should be assigned for hidden component.  |
 |  `postponeAutoHide`  |  boolean  |  `true`  |  Whether component's autohiding should be postponed when component props are changed.  |
 |  `showClassName`  |  string  |    |  An additional CSS class that should be set for component's root element when component is visible.  |
+|  `showOnFocus`  |  boolean or function  |  `true`  |  Whether component should be shown on `focus` event.  A function can be specified to determine whether component should be shown.  The following arguments will be passed into function: event data (`SyntheticEvent`) and component's object.  If the function returns a true value, component will be shown.  |
 |  `showOnMouseOver`  |  boolean  |  `true`  |  Should component be shown on mouse over?  |
 |  `showStyle`  |  object  |    |  Styles that should be assigned for visible component.  |
 |  `toggleVisibleOnClick`  |  boolean  |  `true`  |  Whether component visibility should be toggled on a mouse click.  |
@@ -102,7 +113,8 @@ Return `true` when component's root DOM element is clicked.
 
 ## Contributing <a name="contributing"></a> [&#x2191;](#start)
 In lieu of a formal styleguide, take care to maintain the existing coding style.
+Add tests for any new functionality.
 
 ## License <a name="license"></a> [&#x2191;](#start)
-Copyright (c) 2019 Denis Sikuler  
+Copyright (c) 2019-2020 Denis Sikuler  
 Licensed under the MIT license.

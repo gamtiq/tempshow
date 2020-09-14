@@ -30,7 +30,7 @@ describe('TempShow', () => {
     }
 
     // eslint-disable-next-line require-jsdoc
-    function checkClickHide(eventData, props, expectedVisible) {
+    function checkEventHandling(eventData, props, expectedVisible) {
         const wrapper = getSimulatedWrapper(props || {});
         expect( wrapper.state('visible') )
             .equal( true );
@@ -41,7 +41,9 @@ describe('TempShow', () => {
                 {
                     type: 'click'
                 },
-                eventData
+                typeof eventData === 'string'
+                    ? {type: eventData}
+                    : eventData
             )
         );
         expect( wrapper.state('visible') )
@@ -49,6 +51,13 @@ describe('TempShow', () => {
         wrapper.unmount();
     }
 
+    // eslint-disable-next-line require-jsdoc
+    function checkParams(eventData, component) {
+        expect( eventData )
+            .a( 'object' );
+        expect( component )
+            .instanceOf( TempShow );
+    }
 
     it('should render <div>', () => {
         const wrapper = shallow(<TempShow />);
@@ -107,6 +116,23 @@ describe('TempShow', () => {
             .eql( testStyle );
     });
 
+    it('should pass props specified in "componentProps" property to component', () => {
+        const className = 'test-class';
+        const componentClass = 'overwritten';
+        const tabIndex = 2;
+        const props = {
+            className: componentClass,
+            tabIndex
+        };
+        const wrapper = shallow(<TempShow className={className} componentProps={props} />);
+        expect( wrapper.prop('tabIndex') )
+            .equal( tabIndex );
+        expect( wrapper.hasClass(className) )
+            .equal( true );
+        expect( wrapper.hasClass(componentClass) )
+            .equal( false );
+    });
+
     it('click should make component visible', () => {
         simulateAndCheck(null, null, {state: {visible: true}});
     });
@@ -118,13 +144,13 @@ describe('TempShow', () => {
     it('next click should make component invisible', () => {
         const target = {};
 
-        checkClickHide(
+        checkEventHandling(
             {
                 currentTarget: target,
                 target
             }
         );
-        checkClickHide(
+        checkEventHandling(
             {
                 currentTarget: {},
                 target
@@ -133,7 +159,7 @@ describe('TempShow', () => {
                 hideOnAnyClick: true
             }
         );
-        checkClickHide(
+        checkEventHandling(
             {
                 currentTarget: {},
                 target
@@ -147,7 +173,7 @@ describe('TempShow', () => {
     it('next click should not make component invisible', () => {
         // eslint-disable-next-line require-jsdoc
         function check(eventData, props) {
-            checkClickHide(eventData, props, true);
+            checkEventHandling(eventData, props, true);
         }
 
         check(
@@ -318,6 +344,73 @@ describe('TempShow', () => {
             .equal( false );
 
         wrapper.unmount();
+    });
+
+    it('focus event should make component visible', () => {
+        simulateAndCheck(null, 'focus', {state: {visible: true}});
+    });
+
+    it('focus event should not make component visible', () => {
+        simulateAndCheck({showOnFocus: false}, 'focus', {state: {visible: false}});
+    });
+
+    it('focus event should make component visible only when passed function return true value', () => {
+        let result = 0;
+        // eslint-disable-next-line require-jsdoc
+        function check() {
+            return result;
+        }
+
+        simulateAndCheck({showOnFocus: check}, 'focus', {state: {visible: false}});
+
+        result = 1;
+
+        simulateAndCheck({showOnFocus: check}, 'focus', {state: {visible: true}});
+    });
+
+    it('two parameters should be passed in "showOnFocus" function', () => {
+        simulateAndCheck({showOnFocus: checkParams, visible: false}, 'focus', {state: {visible: false}});
+    });
+
+    it('blur event should make component hidden', () => {
+        checkEventHandling('blur', {hideOnBlur: true});
+    });
+
+    it('blur event should not make component hidden', () => {
+        checkEventHandling('blur', {hideOnBlur: false}, true);
+    });
+
+    it('blur event should make component hidden only when passed function return true value', () => {
+        let result = 0;
+        // eslint-disable-next-line require-jsdoc
+        function check() {
+            return result;
+        }
+
+        const wrapper = getSimulatedWrapper({
+            hideOnBlur: check
+        });
+
+        expect( wrapper.state('visible') )
+            .equal( true );
+
+        shallowSimulate(wrapper, 'blur');
+
+        expect( wrapper.state('visible') )
+            .equal( true );
+
+        result = 1;
+
+        shallowSimulate(wrapper, 'blur');
+
+        expect( wrapper.state('visible') )
+            .equal( false );
+
+        wrapper.unmount();
+    });
+
+    it('two parameters should be passed in "hideOnBlur" function', () => {
+        simulateAndCheck({hideOnBlur: checkParams, visible: true}, 'blur', {state: {visible: true}});
     });
 
     it('should call "onShow" handler', () => {

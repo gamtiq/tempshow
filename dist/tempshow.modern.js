@@ -1,66 +1,32 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
-}
-
-function _inheritsLoose(subClass, superClass) {
-  subClass.prototype = Object.create(superClass.prototype);
-  subClass.prototype.constructor = subClass;
-  subClass.__proto__ = superClass;
-}
-
-function _assertThisInitialized(self) {
-  if (self === void 0) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return self;
-}
-
+/**
+ * Component to temporary show some elements.
+ */
 /**
  * Class of component to temporary show some elements.
  *
  * @extends {PureComponent}
  */
 
-var TempShow = /*#__PURE__*/function (_PureComponent) {
-  _inheritsLoose(TempShow, _PureComponent);
-
+class TempShow extends PureComponent {
   /**
    * Component constructor.
    *
    * @param {object} props
    *      Initial props values.
    */
-  function TempShow(props) {
-    var _this;
-
-    _this = _PureComponent.call(this, props) || this;
-    _this.state = {
+  constructor(props) {
+    super(props);
+    this.state = {
       visible: props.visible
     };
-    _this.handleBlur = _this.handleBlur.bind(_assertThisInitialized(_this));
-    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
-    _this.handleFocus = _this.handleFocus.bind(_assertThisInitialized(_this));
-    _this.handleMouseMove = _this.handleMouseMove.bind(_assertThisInitialized(_this));
-    _this.hide = _this.hide.bind(_assertThisInitialized(_this));
-    return _this;
+    this.handleBlur = this.handleBlur.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleFocus = this.handleFocus.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.hide = this.hide.bind(this);
   }
   /**
    * Component's lifecycle method that is invoked immediately after updating occurs.
@@ -72,14 +38,16 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
    */
 
 
-  var _proto = TempShow.prototype;
-
-  _proto.componentDidUpdate = function componentDidUpdate(prevProps, prevState) {
-    var props = this.props,
-        state = this.state;
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      props,
+      state
+    } = this;
 
     if (state.visible === prevState.visible) {
-      var visible = props.visible;
+      const {
+        visible
+      } = props;
 
       if (visible !== state.visible) {
         if (visible) {
@@ -95,9 +63,9 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
   /**
    * Component's lifecycle method that is invoked immediately before a component is unmounted and destroyed.
    */
-  ;
 
-  _proto.componentWillUnmount = function componentWillUnmount() {
+
+  componentWillUnmount() {
     this.hide();
   }
   /**
@@ -106,10 +74,10 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
    * @return {TempShow}
    *      Reference to component's object (`this`).
    */
-  ;
 
-  _proto.cancelHide = function cancelHide() {
-    var timeoutId = this.hideTimeoutId;
+
+  cancelHide() {
+    const timeoutId = this.hideTimeoutId;
 
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -124,11 +92,13 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
    * @see #cancelHide
    * @see #show
    */
-  ;
 
-  _proto.hide = function hide() {
+
+  hide() {
     if (this.state.visible) {
-      var onHide = this.props.onHide;
+      const {
+        onHide
+      } = this.props;
       this.cancelHide().setState({
         visible: false
       });
@@ -146,11 +116,13 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
    * @see #cancelHide
    * @see #hide
    */
-  ;
 
-  _proto.show = function show(autoHideTime) {
-    var props = this.props;
-    var autoHide = typeof autoHideTime === 'number' ? autoHideTime : props.autoHide;
+
+  show(autoHideTime) {
+    const {
+      props
+    } = this;
+    const autoHide = typeof autoHideTime === 'number' ? autoHideTime : props.autoHide;
     this.cancelHide();
 
     if (autoHide > 0) {
@@ -173,9 +145,9 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
    * @see #hide
    * @see #show
    */
-  ;
 
-  _proto.toggleVisible = function toggleVisible() {
+
+  toggleVisible() {
     if (this.state.visible) {
       this.hide();
     } else {
@@ -189,10 +161,12 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
    *      Data about event.
    * @see #hide
    */
-  ;
 
-  _proto.handleBlur = function handleBlur(eventData) {
-    var hideOnBlur = this.props.hideOnBlur;
+
+  handleBlur(eventData) {
+    const {
+      hideOnBlur
+    } = this.props;
 
     if (hideOnBlur === true || hideOnBlur(eventData, this)) {
       eventData.preventDefault();
@@ -207,10 +181,12 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
    *      Data about event.
    * @see #toggleVisible
    */
-  ;
 
-  _proto.handleClick = function handleClick(eventData) {
-    var props = this.props;
+
+  handleClick(eventData) {
+    const {
+      props
+    } = this;
 
     if (!this.state.visible || props.hideOnAnyClick || props.hideForClick(eventData, this)) {
       eventData.preventDefault();
@@ -225,10 +201,12 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
    *      Data about event.
    * @see #show
    */
-  ;
 
-  _proto.handleFocus = function handleFocus(eventData) {
-    var showOnFocus = this.props.showOnFocus;
+
+  handleFocus(eventData) {
+    const {
+      showOnFocus
+    } = this.props;
 
     if (showOnFocus === true || showOnFocus(eventData, this)) {
       eventData.preventDefault();
@@ -243,9 +221,9 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
    *      Data about event.
    * @see #show
    */
-  ;
 
-  _proto.handleMouseMove = function handleMouseMove(eventData) {
+
+  handleMouseMove(eventData) {
     eventData.preventDefault();
     eventData.stopPropagation();
     this.show();
@@ -256,24 +234,32 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
    * @return {ReactElement}
    *      Component view.
    */
-  ;
 
-  _proto.render = function render() {
-    var props = this.props;
-    var children = props.children,
-        Component = props.component,
-        componentRef = props.componentRef,
-        hideClassName = props.hideClassName,
-        hideStyle = props.hideStyle,
-        showClassName = props.showClassName,
-        showOnMouseOver = props.showOnMouseOver,
-        showStyle = props.showStyle,
-        toggleVisibleOnClick = props.toggleVisibleOnClick;
-    var className = props.className;
-    var visible = this.state.visible;
-    var handleClick = toggleVisibleOnClick && this.handleClick || null;
-    var handleMove = showOnMouseOver ? this.handleMouseMove : null;
-    var classList = [];
+
+  render() {
+    const {
+      props
+    } = this;
+    const {
+      children,
+      component: Component,
+      componentRef,
+      hideClassName,
+      hideStyle,
+      showClassName,
+      showOnMouseOver,
+      showStyle,
+      toggleVisibleOnClick
+    } = props;
+    let {
+      className
+    } = props;
+    const {
+      visible
+    } = this.state;
+    const handleClick = toggleVisibleOnClick && this.handleClick || null;
+    const handleMove = showOnMouseOver ? this.handleMouseMove : null;
+    const classList = [];
 
     if (className) {
       classList.push(className);
@@ -285,7 +271,7 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
       classList.push(className);
     }
 
-    return /*#__PURE__*/React.createElement(Component, _extends({}, props.componentProps, {
+    return /*#__PURE__*/React.createElement(Component, Object.assign({}, props.componentProps, {
       ref: componentRef,
       className: classList.join(' '),
       style: visible ? showStyle : hideStyle,
@@ -297,10 +283,17 @@ var TempShow = /*#__PURE__*/function (_PureComponent) {
       onFocus: props.showOnFocus ? this.handleFocus : null,
       onBlur: props.hideOnBlur ? this.handleBlur : null
     }), children);
-  };
+  }
 
-  return TempShow;
-}(PureComponent);
+}
+/**
+ * Id of timeout after which component will be hidden.
+ *
+ * @type {number}
+ * @instance
+ * @memberof TempShow
+ */
+
 TempShow.prototype.hideTimeoutId = null;
 /**
  * Default function that is used to determine whether component should be hidden on a mouse click.
@@ -459,4 +452,4 @@ TempShow.defaultProps = {
 };
 
 export default TempShow;
-//# sourceMappingURL=tempshow.es.js.map
+//# sourceMappingURL=tempshow.modern.js.map

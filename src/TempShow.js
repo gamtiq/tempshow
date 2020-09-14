@@ -24,7 +24,9 @@ export default class TempShow extends PureComponent {
             visible: props.visible
         };
 
+        this.handleBlur = this.handleBlur.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleFocus = this.handleFocus.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
         this.hide = this.hide.bind(this);
     }
@@ -110,7 +112,6 @@ export default class TempShow extends PureComponent {
             : props.autoHide;
         this.cancelHide();
         if (autoHide > 0) {
-            // eslint-disable-next-line no-magic-numbers
             this.hideTimeoutId = setTimeout(this.hide, autoHide * 1000);
         }
         if (! this.state.visible) {
@@ -137,6 +138,22 @@ export default class TempShow extends PureComponent {
     }
 
     /**
+     * Handle `blur` event on component.
+     *
+     * @param {SyntheticEvent} eventData
+     *      Data about event.
+     * @see #hide
+     */
+    handleBlur(eventData) {
+        const { hideOnBlur } = this.props;
+        if (hideOnBlur === true || hideOnBlur(eventData, this)) {
+            eventData.preventDefault();
+            eventData.stopPropagation();
+            this.hide();
+        }
+    }
+
+    /**
      * Handle mouse click on component.
      *
      * @param {SyntheticEvent} eventData
@@ -149,6 +166,22 @@ export default class TempShow extends PureComponent {
             eventData.preventDefault();
             eventData.stopPropagation();
             this.toggleVisible();
+        }
+    }
+
+    /**
+     * Handle `focus` event on component.
+     *
+     * @param {SyntheticEvent} eventData
+     *      Data about event.
+     * @see #show
+     */
+    handleFocus(eventData) {
+        const { showOnFocus } = this.props;
+        if (showOnFocus === true || showOnFocus(eventData, this)) {
+            eventData.preventDefault();
+            eventData.stopPropagation();
+            this.show();
         }
     }
 
@@ -194,6 +227,7 @@ export default class TempShow extends PureComponent {
     
         return (
             <Component
+                {...props.componentProps}
                 ref={componentRef}
                 className={classList.join(' ')}
                 style={visible
@@ -205,6 +239,12 @@ export default class TempShow extends PureComponent {
                 onTouchMove={handleMove}
                 onMouseLeave={props.hideOnMouseLeave
                     ? this.hide
+                    : null}
+                onFocus={props.showOnFocus
+                    ? this.handleFocus
+                    : null}
+                onBlur={props.hideOnBlur
+                    ? this.handleBlur
                     : null}>
                 {children}
             </Component>
@@ -256,6 +296,10 @@ TempShow.propTypes = {
      */
     component: PropTypes.elementType,
     /**
+     * Any properties (except for `className` and `style`) that should be passed to component.
+     */
+    componentProps: PropTypes.object,
+    /**
      * An optional ref callback to get reference to the root (top-most) element of the rendered component.
      * Just like other refs, this will provide `null` when it unmounts.
      *
@@ -275,13 +319,24 @@ TempShow.propTypes = {
      * when value of `hideOnAnyClick` prop is `false`.
      * The following arguments will be passed into function: event data (`SyntheticEvent`)
      * and component's object.
-     * If function returns `true`, component will be hidden.
+     * If the function returns a true value, component will be hidden.
      */
     hideForClick: PropTypes.func,
     /**
      * Whether component should be hidden on any mouse click.
      */
     hideOnAnyClick: PropTypes.bool,
+    /**
+     * Whether component should be hidden on `blur` event.
+     * A function can be specified to determine whether component should be hidden.
+     * The following arguments will be passed into function: event data (`SyntheticEvent`)
+     * and component's object.
+     * If the function returns a true value, component will be hidden.
+     */
+    hideOnBlur: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.func
+    ]),
     /**
      * Whether component should be hidden when mouse leaves area of component's root DOM element.
      */
@@ -298,6 +353,17 @@ TempShow.propTypes = {
      * An additional CSS class that should be set for component's root element when component is visible.
      */
     showClassName: PropTypes.string,
+    /**
+     * Whether component should be shown on `focus` event.
+     * A function can be specified to determine whether component should be shown.
+     * The following arguments will be passed into function: event data (`SyntheticEvent`)
+     * and component's object.
+     * If the function returns a true value, component will be shown.
+     */
+    showOnFocus: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.func
+    ]),
     /**
      * Should component be shown on mouse over?
      */
@@ -317,10 +383,12 @@ TempShow.propTypes = {
     visible: PropTypes.bool,
     /**
      * Function that should be called on component hidding.
+     * The following arguments will be passed into function: `false` and component's object.
      */
     onHide: PropTypes.func,
     /**
      * Function that should be called on component show.
+     * The following arguments will be passed into function: `true` and component's object.
      */
     onShow: PropTypes.func,
 };
@@ -330,7 +398,9 @@ TempShow.defaultProps = {
     component: 'div',
     hideForClick: TempShow.hideForClick,
     hideOnAnyClick: false,
+    hideOnBlur: false,
     postponeAutoHide: true,
+    showOnFocus: true,
     showOnMouseOver: true,
     toggleVisibleOnClick: true,
     visible: false
