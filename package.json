@@ -1,6 +1,6 @@
 {
   "name": "tempshow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "React component to temporary show some components/elements",
   "source": "src/TempShow.js",
   "main": "dist/tempshow.js",
@@ -14,7 +14,10 @@
     "lint-all-error": "eslint \"**/*.js\"",
     "check": "npm run lint && npm test",
     "check-all": "npm run lint-all && npm test",
-    "test": "mocha"
+    "test": "mocha",
+    "release": "bump patch --commit --tag --all --push",
+    "release-minor": "bump minor --commit --tag --all --push",
+    "release-major": "bump major --commit --tag --all --push"
   },
   "repository": {
     "type": "git",
@@ -32,6 +35,14 @@
     "elements",
     "children",
     "components",
+    "content",
+    "contents",
+    "change",
+    "visibility",
+    "visible",
+    "hidden",
+    "auto-hide",
+    "auto hide",
     "ui"
   ],
   "peerDependencies": {
@@ -50,6 +61,7 @@
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
     "@babel/register": "^7.11.5",
+    "@jsdevtools/version-bump-prompt": "^6.1.0",
     "chai": "4.2.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.4",
